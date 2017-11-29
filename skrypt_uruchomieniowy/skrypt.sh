@@ -22,6 +22,16 @@ function chooseTheConfigurationOption(){
 	chosenOption=$(<$O_STREAM)
 }
 
+function progressBar(){
+	for i in $(seq 0 10 100) ; do sleep 0.1; echo $i | dialog --gauge "$1..." 10 70 0; done
+}
+
+function gitConfiguration(){
+	clear
+	progressBar "Ładowanie usługi GitHub"
+}
+
+
 function configuration(){
 	getNameFromUser
 	
@@ -30,12 +40,12 @@ function configuration(){
 	chooseTheConfigurationOption $name
 
 	case $chosenOption in
-  		1) echo "GitHub" ;;
-		2) echo "Baza danych" ;;
-  		3) echo "Serwer Apache" ;;
-		4) echo "Node.js" ;;
-		5) echo "Wybór IDE" ;;
-  		*) break 
+  		1) gitConfiguration ;;
+		2) databaseConfiguration ;;
+  		3) apacheConfiguration ;;
+		4) nodejsConfiguration ;;
+		5) ideChoice ;;
+  		*) clear; break ;;
 	esac	
 	done
 }
