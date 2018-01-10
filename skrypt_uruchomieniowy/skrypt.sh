@@ -23,12 +23,33 @@ function chooseTheConfigurationOption(){
 }
 
 function progressBar(){
-	for i in $(seq 0 10 100) ; do sleep 0.1; echo $i | dialog --gauge "$1..." 10 70 0; done
+	for i in $(seq 0 10 100) ; do sleep 0.1; echo $i | dialog --gauge "$1..." 7 50 0; done
 }
 
 function gitConfiguration(){
 	clear
 	progressBar "Ładowanie usługi GitHub"
+
+	#USTAWIENIA IDENTYFIKACJI UZYTKOWNIKA
+	#email
+	#git config --global user.email "email@example.com"
+
+	#nazwa uzytkownika
+	#git config --global user.name "user name" 
+
+	#TWORZENIE PRZYKLADOWEGO REPOZYTORIUM LOKALNEGO
+}
+
+function databaseConfiguration(){
+	clear
+	progressBar "Ładowanie usług bazy danych"
+
+	#TWORZENIE NOWEGO UZYTKOWNIKA BAZY DANYCH
+}
+
+function apacheConfiguration(){
+	clear
+	progressBar "Ładowanie usług serwera Apache"
 }
 
 
