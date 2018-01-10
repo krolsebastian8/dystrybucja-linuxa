@@ -23,12 +23,12 @@ function chooseTheConfigurationOption(){
 }
 
 function progressBar(){
-	for i in $(seq 0 10 100) ; do sleep 0.1; echo $i | dialog --gauge "$1..." 7 50 0; done
+	for i in $(seq 0 10 100) ; do sleep $2; echo $i | dialog --gauge "$1..." 7 50 0; done
 }
 
 function gitConfiguration(){
 	clear
-	progressBar "Ładowanie usługi GitHub"
+	progressBar "Ładowanie usługi GitHub" 0.1
 
 	#USTAWIENIA IDENTYFIKACJI UZYTKOWNIKA
 	#email
@@ -42,14 +42,24 @@ function gitConfiguration(){
 
 function databaseConfiguration(){
 	clear
-	progressBar "Ładowanie usług bazy danych"
+	progressBar "Ładowanie usług bazy danych" 0.1
 
 	#TWORZENIE NOWEGO UZYTKOWNIKA BAZY DANYCH
 }
 
 function apacheConfiguration(){
 	clear
-	progressBar "Ładowanie usług serwera Apache"
+	progressBar "Ładowanie usług serwera Apache" 0.1
+}
+
+function nodejsConfiguration(){
+	clear
+	progressBar "Ładowanie usług Node.js" 0.1
+}
+
+function ideChoice(){
+	clear
+	progressBar "Ładowanie okna wyboru środowiska programistycznego" 0.2
 }
 
 
