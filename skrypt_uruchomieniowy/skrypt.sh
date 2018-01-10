@@ -48,6 +48,7 @@ function gitConfiguration(){
     #git config --global user.name "$githubusername" 
 
     #TWORZENIE PRZYKLADOWEGO REPOZYTORIUM LOKALNEGO
+    
     clear
     #>$O_STREAM
     dialog --title "Tworzenie lokalnego repozytorium" --yesno "Czy chcesz teraz utworzyć repozytorium lokalne?" 8 50
