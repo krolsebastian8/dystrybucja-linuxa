@@ -18,7 +18,7 @@ function chooseTheConfigurationOption(){
 		2 "Konfiguracja Bazy danych" \
 		3 "Konfiguracja Serwera Apache" \
 		4 "Node.js" \
-		5 "Wybór IDE" 2>$O_STREAM
+                5 "Wybór IDE" 2>$O_STREAM
 	chosenOption=$(<$O_STREAM)
 }
 
@@ -26,18 +26,39 @@ function progressBar(){
 	for i in $(seq 0 10 100) ; do sleep $2; echo $i | dialog --gauge "$1..." 7 50 0; done
 }
 
+function createLocalRepository(){
+	echo "do nothing";	
+}
+
 function gitConfiguration(){
 	clear
 	progressBar "Ładowanie usługi GitHub" 0.1
-
-	#USTAWIENIA IDENTYFIKACJI UZYTKOWNIKA
-	#email
-	#git config --global user.email "email@example.com"
-
-	#nazwa uzytkownika
-	#git config --global user.name "user name" 
+	
+	clear
+	>$O_STREAM
+        dialog --title "Personalizacja konta GitHUB" --inputbox "Podaj swój e-mail: " 8 50 2>$O_STREAM
+        email=$(<$O_STREAM)	
+	
+	clear
+	>$O_STREAM
+        dialog --title "Personalizacja konta GitHUB" --inputbox "Podaj wyświetlaną nazwę użytkownika konta GitHUB: " 8 50 2>$O_STREAM
+        githubusername=$(<$O_STREAM)
+        
+        #ODKOMENTOWAC PONIŻSZE LINIE KODU
+	#git config --global user.email "$email"
+	#git config --global user.name "$githubusername" 
 
 	#TWORZENIE PRZYKLADOWEGO REPOZYTORIUM LOKALNEGO
+	clear
+	#>$O_STREAM
+	dialog --title "Tworzenie lokalnego repozytorium" --yesno "Czy chcesz teraz utworzyć repozytorium lokalne?" 8 50
+       	chosenOption=$?
+
+
+	case $chosenOption in
+		0) createLocalRepository ;;
+		*) clear; ;;
+	esac
 }
 
 function databaseConfiguration(){
