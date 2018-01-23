@@ -29,6 +29,34 @@ function createLocalRepository(){
     dialog --msgbox "Repozytorium zostało utworzone w lokalizacji:\n ~/GitHUB/LocalRepository" 7 50
 }
 
+function changeDatabaseUserPassword(){
+	newPassword="password"
+	repeatNewPassword="repeatNewPassword"
+		
+	while [ "$newPassword" != "$repeatNewPassword" ] ; do
+		clear
+		>$O_STREAM
+    		dialog --inputbox "Podaj nowe hasło: " 8 50 2>$O_STREAM
+    		newPassword=$(<$O_STREAM)
+	
+		clear
+		>$O_STREAM
+    		dialog --inputbox "Powtórz nowe hasło: " 8 50 2>$O_STREAM
+		repeatNewPassword=$(<$O_STREAM)
+
+		if [ "$newPassword" != "$repeatNewPassword" ] 
+		then
+			clear
+			dialog --msgbox "Hasła się różnią. Spróbuj ponownie" 7 50
+		fi
+    		#dialog --inputbox "Powtórz nowe hasło: " 8 50 2>$O_STREAM
+		#repeatNewPassword=$(<$O_STREAM)
+	done
+
+	
+
+}
+
 function gitConfiguration(){
     clear
     progressBar "Ładowanie usługi GitHub" 0.1
@@ -61,8 +89,62 @@ function gitConfiguration(){
 }
 
 function databaseConfiguration(){
-    clear
-    progressBar "Ładowanie usług bazy danych" 0.1
+    	clear
+    	progressBar "Ładowanie usług bazy danych" 0.1
+	clear
+	#Sciezka do pliku konfiguracyjnego bazy my.cnf
+	#/etc/mysql/my.cfg
+	#path_to_myCnf=~/Desktop/tmp/my.cnf;
+	
+	#Przydatne: do sprawdzenia wersji MySQL:
+	#mysql -V
+
+	#Zmiana hasla do db------------------------------------------------
+	#Haslo podane przes usera jest w userDBpasswd
+
+	dialog --title "Konfiguracja bazy danych" --yesno "Czy chcesz zmienić hasło użytkownika bazy danych?" 8 50
+	chosenOption=$?
+	case $chosenOption in
+		0) changeDatabaseUserPassword ;;
+		*) clear; ;;
+	esac
+
+	#userDBpasswd=abc;
+	
+	#Podmiana odpowiedniego pola w pliku my.cnf
+	
+	#--sed -i -e "s/#password       = your_password/password       = $userDBpasswd/g" $path_to_myCnf
+	
+	
+	#Zmiana directory z danymi-----------------------------------------
+	
+	#Sciezka do nowego directory
+	#--newDirectoryPath=costam
+	
+	#Zmiana odpowiedniej linijki w pliku
+	#--sed -i "/datadir         = */c\datadir         = $newDirectoryPath" $path_to_myCnf
+
+
+	#Zmiana server-id--------------------------------------------------
+	
+	#Nowwe, podane przez usera server-id (musi byc z przedzialu 1 - 2^32-1)
+	newServerID=35
+	
+	#Zmiana odpowiedniej linijki
+	#--sed -i "/server-id       = */c\server-id       = $newServerID" $path_to_myCnf
+	
+	
+	#Make MariaDB start on boot--------------------------------------
+	#UWAGA: nie rozpoznaje mi komendy systemctl - mozna pominac ten etap konfiguracji
+	#To check if MariaDB starts on boot
+	#systemctl is-active mariadb
+	#systemctl is-enabled mariadb
+	
+	#Enable starting on boot
+	#systemctl enable mariadb
+	
+	#systemctl start mariadb
+	#systemctl start mariadb
 
     #TWORZENIE NOWEGO UZYTKOWNIKA BAZY DANYCH
 }
