@@ -30,27 +30,27 @@ function createLocalRepository(){
 }
 
 function changeDatabaseUserPassword(){
-	newPassword="password"
+	newPassword=""
 	repeatNewPassword="repeatNewPassword"
 		
 	while [ "$newPassword" != "$repeatNewPassword" ] ; do
 		clear
 		>$O_STREAM
-    		dialog --inputbox "Podaj nowe hasło: " 8 50 2>$O_STREAM
+    		dialog --passwordbox "Podaj nowe hasło: " 8 50 2>$O_STREAM
     		newPassword=$(<$O_STREAM)
 	
 		clear
 		>$O_STREAM
-    		dialog --inputbox "Powtórz nowe hasło: " 8 50 2>$O_STREAM
+    		dialog --passwordbox "Powtórz nowe hasło: " 8 50 2>$O_STREAM
 		repeatNewPassword=$(<$O_STREAM)
 
+		if[  ]
+		
 		if [ "$newPassword" != "$repeatNewPassword" ] 
 		then
 			clear
 			dialog --msgbox "Hasła się różnią. Spróbuj ponownie" 7 50
 		fi
-    		#dialog --inputbox "Powtórz nowe hasło: " 8 50 2>$O_STREAM
-		#repeatNewPassword=$(<$O_STREAM)
 	done
 
 	
@@ -71,12 +71,11 @@ function gitConfiguration(){
     dialog --title "Personalizacja konta GitHUB" --inputbox "Podaj wyświetlaną nazwę użytkownika konta GitHUB: " 8 50 2>$O_STREAM
     githubusername=$(<$O_STREAM)
         
-    #ODKOMENTOWAC PONIŻSZE LINIE KODU
+    #ODKOMENTOWAC PONIŻSZE LINIE KODU PO WRZUCENIU SKRYPTU DO DYSTRYBUCJI
     #git config --global user.email "$email"
     #git config --global user.name "$githubusername" 
 
-    #TWORZENIE PRZYKLADOWEGO REPOZYTORIUM LOKALNEGO
-    
+    #Tworzenie przykladowego repozytorium lokalnego
     clear
     #>$O_STREAM
     dialog --title "Tworzenie lokalnego repozytorium" --yesno "Czy chcesz teraz utworzyć repozytorium lokalne?" 8 50
@@ -93,14 +92,7 @@ function databaseConfiguration(){
     	progressBar "Ładowanie usług bazy danych" 0.1
 	clear
 	#Sciezka do pliku konfiguracyjnego bazy my.cnf
-	#/etc/mysql/my.cfg
-	#path_to_myCnf=~/Desktop/tmp/my.cnf;
-	
-	#Przydatne: do sprawdzenia wersji MySQL:
-	#mysql -V
-
-	#Zmiana hasla do db------------------------------------------------
-	#Haslo podane przes usera jest w userDBpasswd
+	path_to_myCnf=/etc/mysql/my.cfg
 
 	dialog --title "Konfiguracja bazy danych" --yesno "Czy chcesz zmienić hasło użytkownika bazy danych?" 8 50
 	chosenOption=$?
@@ -109,59 +101,28 @@ function databaseConfiguration(){
 		*) clear; ;;
 	esac
 
-	#userDBpasswd=abc;
-	
-	#Podmiana odpowiedniego pola w pliku my.cnf
-	
-	#--sed -i -e "s/#password       = your_password/password       = $userDBpasswd/g" $path_to_myCnf
-	
-	
-	#Zmiana directory z danymi-----------------------------------------
-	
-	#Sciezka do nowego directory
-	#--newDirectoryPath=costam
-	
-	#Zmiana odpowiedniej linijki w pliku
-	#--sed -i "/datadir         = */c\datadir         = $newDirectoryPath" $path_to_myCnf
+	if [ "$newPassword" != "" & "$newPassword" == "$repeatNewPassword" ]
+	then
+		clear
+		dialog --msgbox "Hasła zostało zmienione" 7 50
+		echo $path_to_myCnf
 
 
-	#Zmiana server-id--------------------------------------------------
-	
-	#Nowwe, podane przez usera server-id (musi byc z przedzialu 1 - 2^32-1)
-	newServerID=35
-	
-	#Zmiana odpowiedniej linijki
-	#--sed -i "/server-id       = */c\server-id       = $newServerID" $path_to_myCnf
-	
-	
-	#Make MariaDB start on boot--------------------------------------
-	#UWAGA: nie rozpoznaje mi komendy systemctl - mozna pominac ten etap konfiguracji
-	#To check if MariaDB starts on boot
-	#systemctl is-active mariadb
-	#systemctl is-enabled mariadb
-	
-	#Enable starting on boot
-	#systemctl enable mariadb
-	
-	#systemctl start mariadb
-	#systemctl start mariadb
-
-    #TWORZENIE NOWEGO UZYTKOWNIKA BAZY DANYCH
+		#ODKOMENTOWAC PONIŻSZĄ LINIJKĘ KODU PO WRZUCENIU SKRYPTU DO DYSTRYBUCJI
+		#--sed -i -e "s/#password       = your_password/password       = $newPassword/g" $path_to_myCnf
+	fi
 }
 
 function apacheConfiguration(){
-    clear
-    progressBar "Ładowanie usług serwera Apache" 0.1
-}
-
-function nodejsConfiguration(){
-    clear
-    progressBar "Ładowanie usług Node.js" 0.1
+    	clear
+    	progressBar "Ładowanie usług serwera Apache" 0.1
+	clear
+	pathToApacheConfigFile=
 }
 
 function ideChoice(){
-    clear
-    progressBar "Ładowanie okna wyboru środowiska programistycznego" 0.2
+    	clear
+    	progressBar "Ładowanie okna wyboru środowiska programistycznego" 0.2
 }
 
 
@@ -176,8 +137,7 @@ function configuration(){
     	1) gitConfiguration ;;
     	2) databaseConfiguration ;;
     	3) apacheConfiguration ;;
-    	4) nodejsConfiguration ;;
-    	5) ideChoice ;;
+    	4) ideChoice ;;
   	*) clear; break ;;
     esac	
     done
